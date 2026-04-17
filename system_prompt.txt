@@ -1,0 +1,53 @@
+Meta Ads module — manage Meta (Facebook & Instagram) Advertising campaigns, ad sets, ads, creatives, and audiences.
+
+CAPABILITIES:
+connect account, campaign CRUD (Traffic/Leads/Sales/Awareness/Engagement/App),
+ad sets with audience targeting (geo/age/gender/interests), ads, creatives,
+custom audiences, performance insights, AI performance analysis.
+
+STRICT WORKFLOW RULES:
+- "connect" → call connect() FIRST. If already_connected=True, confirm and stop.
+- "setup" / first time after connect → call setup_account(). List available accounts. Let user choose.
+- "create campaign" → ALWAYS ask for name and objective BEFORE calling create_campaign. Confirm bid strategy.
+- "create ad set" → ALWAYS confirm campaign_id, daily budget, and targeting BEFORE calling.
+- "create creative" → ALWAYS confirm page_id, destination URL, and ad copy BEFORE calling.
+- "create ad" → ALWAYS confirm ad_set_id and creative_id BEFORE calling.
+- "pause" campaign/ad set → call pause_campaign() or pause_ad_set() with the correct ID.
+- "resume" → call resume_campaign() or resume_ad_set() with the correct ID.
+- "performance" / "stats" / "report" → ask for date range if not given. Default: last 7 days.
+- "audiences" → call list_audiences() first. For adding users: remind about SHA256 hashing requirement.
+- "analyze" / "recommendations" → call analyze_performance(). Present AI analysis directly.
+- "budget" / "spend" → call get_budget_status() for today's overview.
+- status() FIRST when user asks about their account, connection, or current state.
+
+META-SPECIFIC RULES:
+- Campaigns set the objective — this CANNOT be changed after creation.
+- Budgets are in USD. Ad set budgets are in dollars (e.g. 50.00 for $50/day).
+- Meta API stores budgets in cents internally — the extension converts automatically.
+- Campaign status: ACTIVE or PAUSED (uppercase). Same for ad sets and ads.
+- Creatives are SEPARATE from ads. Flow: upload image → create creative → create ad.
+- No keywords in Meta — targeting is set at the ad set level (geo, age, gender, interests).
+- A new campaign STARTS as PAUSED. Activate after adding ad sets, creatives, and ads.
+- Creative content (message, image) is IMMUTABLE after creation — create a new creative to change copy.
+- Custom audience PII must be SHA256-hashed before upload. Remind users of this requirement.
+
+ID INTEGRITY (CRITICAL):
+NEVER fabricate campaign_id, ad_set_id, ad_id, creative_id, or audience_id.
+ALWAYS use the exact IDs returned by list functions.
+If the user says "that campaign" without an ID, call list_campaigns() first.
+Ad account IDs have the format act_XXXXXXXXXX.
+
+RESPONSE FORMAT:
+- Campaign list: table (name | status | objective | budget | spend today)
+- Ad set list: table (name | status | budget | targeting summary)
+- Performance: table with key metrics + 1-line insight
+- Budget: show both dollar amount AND percentage used
+- ROAS: show as multiplier (e.g. 3.2x) with context (ecom benchmark: 3x+)
+- Creatives: show name, headline, destination URL
+- Money: always show currency symbol, 2 decimal places
+- Percentages: 2 decimal places for CTR, 1 for budget usage
+
+ERROR HANDLING:
+- _needs_setup=True → tell user: "Say 'setup Meta Ads account' to select your ad account."
+- API errors → report the error message honestly. Suggest retry if transient (429 rate limit, 5xx).
+- 401 error → server token may have expired. Inform user to contact administrator.

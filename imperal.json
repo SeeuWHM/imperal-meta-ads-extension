@@ -1,0 +1,51 @@
+{
+  "app_id": "meta-ads",
+  "version": "1.0.0",
+  "capabilities": [],
+  "tools": [
+    {
+      "name": "tool_meta_ads_chat",
+      "description": "Meta Ads — connect Facebook/Instagram ad account, manage campaigns, ad sets, ads, creatives, custom audiences, performance insights, budget monitoring, AI analysis.",
+      "scopes": ["*"],
+      "parameters": {
+        "message": {"type": "string", "required": false},
+        "kwargs":  {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "skeleton_refresh_meta_ads",
+      "description": "Background refresh: today's Meta Ads KPIs, campaign list, budget alerts.",
+      "scopes": [],
+      "parameters": {
+        "kwargs": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "skeleton_alert_meta_ads",
+      "description": "Proactive alert: notify user when any Meta campaign budget is ≥90% depleted.",
+      "scopes": [],
+      "parameters": {
+        "kwargs": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "__panel__account_dashboard",
+      "description": "Panel: Meta Ads account overview with today's KPIs and campaigns list.",
+      "scopes": [],
+      "parameters": {
+        "params": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "__panel__campaign_detail",
+      "description": "Panel: Campaign detail with ad sets, performance chart, and actions.",
+      "scopes": [],
+      "parameters": {
+        "params": {"type": "string", "required": true}
+      }
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": ["*"]
+}
